@@ -363,16 +363,6 @@ docker build -t medhelp-ai .
 docker run -p 8501:8501 -e GITHUB_TOKEN=<token> medhelp-ai
 ```
 
-### Demo Video Walkthrough
-
-See a complete walkthrough of the application:
-
-1. **Uploading an Image** (1:00 - 2:15)
-2. **AI Analysis Process** (2:15 - 3:30)
-3. **Interpreting Results** (3:30 - 5:00)
-4. **Safety Features** (5:00 - 6:30)
-
-**Video Link**: [Coming Soon]
 
 ### Interactive Features to Try
 
