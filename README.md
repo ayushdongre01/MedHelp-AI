@@ -312,7 +312,6 @@ Below are sample outputs demonstrating the analysis of medical images generated 
 ![MedHelp AI – Sample Image 2](https://github.com/ayushdongre01/MedHelp-AI/blob/main/images/2.png)
 ![MedHelp AI – Sample Image 3](https://github.com/ayushdongre01/MedHelp-AI/blob/main/images/3.png)
 ![MedHelp AI – Sample Image 4](https://github.com/ayushdongre01/MedHelp-AI/blob/main/images/4.png)
-![MedHelp AI – Sample Image 5](https://github.com/ayushdongre01/MedHelp-AI/blob/main/images/5.png)
 
 ### Where to Get Test Images
 
