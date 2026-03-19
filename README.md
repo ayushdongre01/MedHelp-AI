@@ -1,0 +1,684 @@
+# 🏥 MedHelp AI - Medical Image Intelligence
+
+**AI-powered analysis of medical images to assist early insights and understanding**
+
+An intelligent medical imaging assistant powered by Meta's Llama 4 Scout model, designed to help users understand potential health concerns through visual analysis of medical images. This tool leverages advanced multimodal AI to provide structured, safe, and responsible medical insights.
+
+---
+
+## 📋 Table of Contents
+
+- [Overview](#overview)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Installation & Setup](#installation--setup)
+- [Configuration](#configuration)
+- [Usage Guide](#usage-guide)
+- [Safety Features](#safety-features)
+- [Sample Images](#sample-images)
+- [Live Demo](#live-demo)
+- [Project Structure](#project-structure)
+- [Troubleshooting](#troubleshooting)
+- [Contributing](#contributing)
+- [Disclaimer](#disclaimer)
+
+---
+
+## Overview
+
+**MedHelp AI** is a Streamlit-based web application designed to analyze medical images and provide structured health insights. The application uses Meta's Llama 4 Scout 17B model via GitHub AI inference to deliver:
+
+- **Visual Analysis** - Detailed examination of medical images
+- **Possible Conditions** - List of potential health conditions with confidence levels
+- **Severity Assessment** - Categorized severity ratings (Mild → Emergency)
+- **General Guidance** - Safe, non-prescriptive health advice
+- **Safety Warnings** - Clear guidance on when to seek professional medical help
+
+> **⚠️ IMPORTANT**: This tool is **informational only** and is **not a substitute for professional medical diagnosis or treatment**. Always consult a qualified healthcare professional.
+
+---
+
+## Features
+
+### 🎯 Core Capabilities
+
+- **Multimodal AI Analysis** - Combines image recognition with medical knowledge
+- **Structured Output** - Organized, easy-to-read format for medical insights
+- **Safety-First Design** - Built-in constraints and disclaimers
+- **Real-time Processing** - Instant analysis with AI-powered responses
+- **Multiple Image Formats** - Supports PNG, JPG, and JPEG images
+- **Clean UI** - Intuitive Streamlit interface with custom styling
+
+### 🔒 Safety Guarantees
+
+- No definitive diagnoses provided
+- Consistent use of cautious language ("may", "could", "possibly")
+- No medication prescriptions or dosages
+- Clear emergency warning indicators
+- Professional consultation recommendations
+
+### 📊 Analysis Sections
+
+1. **Visual Observations** - What's visible in the image
+2. **Possible Conditions** - 3-5 potential conditions with confidence levels
+3. **Related Symptoms** - Common associated symptoms
+4. **Severity Assessment** - Color-coded severity levels (🟢🟡🟠🔴)
+5. **General Advice** - Safe hygiene and care tips
+6. **When to Seek Medical Help** - Warning signs and time thresholds
+
+---
+
+## Tech Stack
+
+| Component | Technology | Purpose |
+|-----------|-----------|---------|
+| **Frontend** | Streamlit | Web UI framework |
+| **AI Model** | Meta Llama 4 Scout 17B | Medical image analysis |
+| **Model Provider** | GitHub AI Inference | API endpoint for model |
+| **Image Processing** | PIL (Pillow) | Image handling & display |
+| **Authentication** | Azure Core Credentials | Secure API access |
+| **Environment** | Python 3.8+ | Runtime environment |
+| **Configuration** | python-dotenv | Environment variable management |
+
+### Dependencies
+
+```
+streamlit              # Web framework
+azure-ai-inference    # AI model API client
+azure-core            # Azure credentials
+python-dotenv         # Environment configuration
+Pillow               # Image processing
+```
+
+---
+
+## Installation & Setup
+
+### Prerequisites
+
+- Python 3.8 or higher
+- GitHub AI Inference API access
+- GitHub Token with model access permissions
+
+### Step 1: Clone or Download
+
+```bash
+# Download the project
+cd MedHelp\ AI
+```
+
+### Step 2: Create Virtual Environment (Optional but Recommended)
+
+```bash
+# Create virtual environment
+python -m venv venv
+
+# Activate virtual environment
+# On Windows:
+venv\Scripts\activate
+# On macOS/Linux:
+source venv/bin/activate
+```
+
+### Step 3: Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### Step 4: Configure Environment Variables
+
+Create a `.env` file in the project root:
+
+```env
+GITHUB_TOKEN=your_github_token_here
+```
+
+Or set the environment variable directly:
+
+```bash
+# Windows
+set GITHUB_TOKEN=your_github_token_here
+
+# macOS/Linux
+export GITHUB_TOKEN=your_github_token_here
+```
+
+### Step 5: Add Logo
+
+Place a `logo.png` file (recommended 300x300px) in the project root directory. This will display in the app header.
+
+### Step 6: Run the Application
+
+```bash
+streamlit run app.py
+```
+
+The application will open in your default browser at `http://localhost:8501`
+
+---
+
+## Configuration
+
+### API Settings
+
+The application uses the following default configuration:
+
+```python
+ENDPOINT: https://models.github.ai/inference
+MODEL: meta/Llama-4-Scout-17B-16E-Instruct
+```
+
+**To change the model**, edit [app.py](app.py) line 17:
+
+```python
+model = "your_desired_model_here"
+```
+
+### Model Parameters
+
+| Parameter | Value | Purpose |
+|-----------|-------|---------|
+| `temperature` | 0.3 | Lower = more deterministic responses (ideal for medical) |
+| `top_p` | 0.9 | Balanced diversity in outputs |
+| `max_tokens` | 2000 | Maximum response length |
+
+---
+
+## Usage Guide
+
+### Basic Workflow
+
+1. **Open Application**
+   ```bash
+   streamlit run app.py
+   ```
+
+2. **Upload Medical Image**
+   - Click "Upload an image" button
+   - Select PNG, JPG, or JPEG file
+   - Image preview will display (max width: 250px)
+
+3. **Generate Analysis**
+   - Click "Generate Analysis" button
+   - Wait for AI processing (typically 5-15 seconds)
+   - Structured medical insights will appear
+
+4. **Review Results**
+   - Read all sections carefully
+   - Pay special attention to severity assessment
+   - Note recommendations for professional help
+
+### Example Analysis Output
+
+```
+⚠️ Informational only — not a medical diagnosis.
+
+## 🩺 Visual Observations
+- Body part: Right forearm
+- Color: Red with slight swelling
+- Distribution: Localized to small area
+- Texture: Inflamed skin surface
+
+## 🤔 Possible Conditions
+- Contact Dermatitis (High confidence)
+- Eczema (Medium confidence)
+- Heat Rash (Medium confidence)
+
+## 📋 Related Symptoms
+- Itching or burning sensation
+- Possible mild fever
+- Usually develops within hours
+
+## ⚖️ Severity Assessment
+🟡 Moderate - Localized inflammation without systemic symptoms
+
+## 💡 General Advice
+- Keep area clean and dry
+- Avoid scratching
+- Use mild soap for washing
+- Avoid known allergens
+
+## 🚑 When to Seek Medical Help
+- If rash spreads or worsens
+- If swelling increases significantly
+- If fever develops: seek immediate care
+- If symptoms persist beyond 2 weeks
+```
+
+### Tips for Best Results
+
+✅ **Good Images:**
+- Clear, well-lit photos
+- Minimal shadows or glare
+- Appropriate zoom (shows affected area clearly)
+- Consistent color temperature
+
+❌ **Poor Images:**
+- Blurry or out of focus
+- Low lighting
+- Extreme angles
+- Too zoomed in or out
+
+---
+
+## Safety Features
+
+### Built-in Medical Safeguards
+
+1. **Non-Diagnostic Language**
+   - Uses probabilistic terms: "may", "could", "possibly"
+   - Never uses absolute conclusions
+
+2. **Emergency Indicators**
+   - 🔴 Emergency level triggers specific urgent advice
+   - Clear warning signs listed
+   - Immediate consultation recommended
+
+3. **Low Temperature Setting**
+   - Temperature: 0.3 (lower = more reliable)
+   - Reduces hallucinations and unreliable outputs
+   - Essential for medical accuracy
+
+4. **Structured Prompt System**
+   - Enforces specific analysis format
+   - Prevents off-topic responses
+   - Ensures comprehensive coverage
+
+5. **Professional Consultation Emphasis**
+   - Every analysis includes "when to seek help"
+   - Regular reminders: "not a doctor"
+   - Liability disclaimer in header
+
+---
+
+## Sample Images
+
+### Image Categories Supported
+
+This application can analyze images of:
+
+- **Skin Conditions**: Rashes, acne, eczema, psoriasis, hives
+- **Wounds & Injuries**: Cuts, bruises, burns, blisters
+- **Inflammation**: Swelling, redness, edema
+- **Infections**: Signs of bacterial or fungal infection
+- **Other**: Visible symptoms of general health concerns
+
+### Sample Test Cases
+
+#### Test Image 1: Mild Skin Rash
+- **Upload**: Red, slightly raised rash on arm
+- **Expected Severity**: 🟡 Moderate
+- **Expected Conditions**: Dermatitis, Urticaria, Heat Rash
+
+#### Test Image 2: Severe Wound
+- **Upload**: Large, deep cut with significant bleeding
+- **Expected Severity**: 🔴 Emergency
+- **Expected Action**: Immediate medical attention recommended
+
+#### Test Image 3: Acute Swelling
+- **Upload**: Severe facial or joint swelling
+- **Expected Severity**: 🟠 Potentially Serious
+- **Expected Conditions**: Allergic reaction, Infection, Trauma
+
+### Where to Get Test Images
+
+- **Public Medical Libraries**: WebMD, Cleveland Clinic
+- **Educational Resources**: Medical textbooks, academic databases
+- **Safe Options**: Create controlled, safe examples with permission
+- **Stock Medical Images**: Properly licensed medical image databases
+
+> ⚠️ Always obtain proper consent before using real patient images
+
+---
+
+## Live Demo
+
+### Option 1: Local Demo
+
+Run the application locally to explore features:
+
+```bash
+streamlit run app.py
+```
+
+**Demo Login:** No authentication required  
+**Demo Duration:** Unlimited (local)  
+**API Cost:** Depends on GitHub AI quotas
+
+### Option 2: Deployed Demo (Coming Soon)
+
+A publicly hosted version will be available at:
+
+- **URL**: `https://medhelp-ai.streamlit.app` (planned)
+- **Status**: 🔄 In Development
+- **ETA**: Q2 2026
+
+### Option 3: Docker Container (Coming Soon)
+
+Deploy as a containerized application:
+
+```bash
+docker build -t medhelp-ai .
+docker run -p 8501:8501 -e GITHUB_TOKEN=<token> medhelp-ai
+```
+
+### Demo Video Walkthrough
+
+See a complete walkthrough of the application:
+
+1. **Uploading an Image** (1:00 - 2:15)
+2. **AI Analysis Process** (2:15 - 3:30)
+3. **Interpreting Results** (3:30 - 5:00)
+4. **Safety Features** (5:00 - 6:30)
+
+**Video Link**: [Coming Soon]
+
+### Interactive Features to Try
+
+- ✅ Upload different image formats (PNG, JPG, JPEG)
+- ✅ Test with various medical conditions
+- ✅ Review severity assessment changes
+- ✅ Compare multiple image analyses
+- ✅ Test UI responsiveness on mobile
+
+---
+
+## Project Structure
+
+```
+MedHelp AI/
+├── app.py                   # Main Streamlit application
+├── requirements.txt         # Python dependencies
+├── logo.png                 # Application logo (optional)
+├── .gitignore               # Git ignore rules
+├── README.md                # This file
+```
+
+### File Descriptions
+
+| File | Purpose |
+|------|---------|
+| `app.py` | Main application logic, UI components, API integration |
+| `api_key.py` | Stores API credentials (⚠️ Never commit to version control) |
+| `requirements.txt` | Python package dependencies |
+| `logo.png` | App header logo/branding |
+| `.env` | Environment variables (GitHub token) |
+
+---
+
+## Troubleshooting
+
+### ❌ Issue: "Error generating response: Invalid token"
+
+**Cause**: GitHub token is invalid, expired, or missing  
+**Solution**:
+1. Verify token is correct in `.env` file
+2. Check GitHub token has AI model access permissions
+3. Regenerate token if expired
+4. Restart the application
+
+```bash
+# Verify token is set
+echo $GITHUB_TOKEN  # macOS/Linux
+echo %GITHUB_TOKEN%  # Windows
+```
+
+### ❌ Issue: "Unable to locate logo.png"
+
+**Cause**: Logo file not found in project root  
+**Solution**:
+1. Add `logo.png` to project root (optional)
+2. Or comment out logo lines in app.py:
+
+```python
+# logo = Image.open("logo.png")  # ← Comment out if missing
+```
+
+### ❌ Issue: Streamlit app won't start
+
+**Cause**: Port 8501 already in use or dependency issue  
+**Solution**:
+```bash
+# Kill process on port 8501
+# Windows: netstat -ano | findstr :8501
+# macOS/Linux: lsof -i :8501
+
+# Try alternative port
+streamlit run app.py --server.port 8502
+```
+
+### ❌ Issue: Slow analysis or timeouts
+
+**Cause**: Model is busy or network latency  
+**Solution**:
+1. Check internet connection
+2. Wait for model to load (first request slower)
+3. Reduce image size (compress before upload)
+4. Try again in a few moments
+
+### ❌ Issue: Blurry or incomplete analysis
+
+**Cause**: Image quality is poor  
+**Solution**:
+1. Upload higher resolution image
+2. Ensure good lighting
+3. Focus on affected area
+4. Minimize shadows and glare
+
+---
+
+## Contributing
+
+### How to Contribute
+
+We welcome contributions! Here's how:
+
+1. **Fork** the repository
+2. **Create** a feature branch (`git checkout -b feature/amazing-feature`)
+3. **Make** your changes
+4. **Test** thoroughly
+5. **Commit** with clear messages (`git commit -m 'Add amazing feature'`)
+6. **Push** to your branch (`git push origin feature/amazing-feature`)
+7. **Open** a Pull Request
+
+### Development Setup
+
+```bash
+# Clone repository
+git clone https://github.com/yourusername/medhelp-ai.git
+
+# Create virtual environment
+python -m venv venv
+source venv/bin/activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Make changes and test
+streamlit run app.py
+```
+
+### Areas for Contribution
+
+- ✅ Add support for additional image formats
+- ✅ Implement image preprocessing/enhancement
+- ✅ Add multiple language support
+- ✅ Create additional analysis prompt templates
+- ✅ Improve UI/UX design
+- ✅ Add unit tests
+- ✅ Performance optimization
+- ✅ Documentation improvements
+
+### Code Style
+
+- Follow PEP 8 guidelines
+- Add docstrings to functions
+- Include type hints
+- Comment complex logic
+
+---
+
+## Disclaimer
+
+### ⚠️ IMPORTANT MEDICAL DISCLAIMER
+
+**MedHelp AI is NOT:**
+- A substitute for professional medical diagnosis
+- A treatment recommendation tool
+- Capable of providing prescriptions
+- A source for definitive medical conclusions
+
+**MedHelp AI IS:**
+- An informational tool for educational purposes
+- A starting point for health discussions with professionals
+- An aid to help you prepare for medical consultations
+- A tool to understand general health concepts
+
+### Liability
+
+The creators and operators of MedHelp AI:
+- Make no warranties about accuracy or completeness
+- Are not liable for medical decisions made using this tool
+- Strongly recommend professional medical consultation
+- Advise users to seek immediate care for emergencies
+
+### Intended Use
+
+This application is intended for:
+- 🟢 Educational health awareness
+- 🟢 General health understanding
+- 🟢 Preparation for medical appointments
+- 🟢 Initial symptom assessment
+
+**NOT intended for:**
+- 🔴 Replacing physician judgment
+- 🔴 Diagnosing serious conditions
+- 🔴 Emergency medical decisions
+- 🔴 Self-treatment without professional advice
+
+### Emergency Contacts
+
+If you experience a medical emergency:
+
+- 🚑 **US**: Call 911
+- 🚑 **UK**: Call 999
+- 🚑 **EU**: Call 112
+- 🚑 **Other**: Contact local emergency services
+
+
+---
+
+## Contact & Support
+
+### Get Help
+
+- **Issues & Bugs**: [GitHub Issues](https://github.com/yourusername/medhelp-ai/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/yourusername/medhelp-ai/discussions)
+- **Email**: support@medhelp-ai.com (placeholder)
+
+### Project Links
+
+- **Repository**: https://github.com/yourusername/medhelp-ai
+- **GitHub AI Docs**: https://github.com/marketplace/models
+- **Streamlit Docs**: https://docs.streamlit.io
+- **Llama Models**: https://www.llama.com
+
+### Acknowledgments
+
+- **Meta** - Llama 4 Scout Model
+- **GitHub** - AI Model Inference API
+- **Streamlit** - Web framework
+- **Azure** - Credentials & inference infrastructure
+
+---
+
+## Version History
+
+| Version | Date | Changes |
+|---------|------|---------|
+| 1.0.0 | 2026-03-19 | Initial release with Llama 4 Scout integration |
+| (Planned) 1.1.0 | Q2 2026 | Multi-language support, Docker deployment |
+| (Planned) 1.2.0 | Q3 2026 | Chat history, multiple image analysis |
+| (Planned) 2.0.0 | Q4 2026 | Advanced RAG, specialist models, user accounts |
+
+---
+
+## FAQ
+
+### Q: Is MedHelp AI a replacement for doctors?
+**A**: No. This tool is informational only. Always consult qualified healthcare professionals for medical decisions.
+
+### Q: What size images should I upload?
+**A**: Recommended 1MB or less. Support formats: PNG, JPG, JPEG. Higher resolution = better analysis.
+
+### Q: Can I use this for emergency situations?
+**A**: No. For emergencies, call emergency services immediately (911, 999, 112).
+
+### Q: How accurate is the analysis?
+**A**: The tool provides educated assessments based on visual analysis, but accuracy depends on image quality and complexity. Never rely solely on this tool.
+
+### Q: Will my data be stored?
+**A**: Currently, images are processed but not stored. However, they are transmitted to GitHub AI servers.
+
+### Q: Can I modify the prompt?
+**A**: Yes! Edit the `prompt` variable in [app.py](app.py) to customize analysis behavior.
+
+### Q: How do I get a GitHub token?
+**A**: Visit [GitHub Settings → Developer Settings → Personal Access Tokens](https://github.com/settings/tokens)
+
+---
+
+## Performance Metrics
+
+Typical performance on standard hardware:
+
+| Operation | Time |
+|-----------|------|
+| Application startup | 2-3 seconds |
+| Image upload | <1 second |
+| AI analysis | 5-15 seconds |
+| Result rendering | <1 second |
+| **Total response time** | **6-16 seconds** |
+
+### Factors Affecting Speed
+
+- 🌍 Network connectivity
+- ⏱️ Model availability (first request slower)
+- 📸 Image size/resolution
+- 🖥️ System resources (CPU, RAM, GPU)
+
+---
+
+## Security
+
+### API Key Security
+
+✅ **DO:**
+- Store tokens in `.env` file
+- Keep `.env` in `.gitignore`
+- Use environment variables
+- Rotate tokens regularly
+
+❌ **DON'T:**
+- Commit API keys to version control
+- Share tokens publicly
+- Hardcode credentials
+- Post keys in issues/PRs
+
+### Example `.gitignore`
+
+```
+.env
+*.pyc
+__pycache__/
+*.egg-info/
+.DS_Store
+venv/
+```
+
+---
+
+**Built with ❤️ for health awareness and education**
+
+---
