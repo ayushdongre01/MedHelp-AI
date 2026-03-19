@@ -346,22 +346,10 @@ streamlit run app.py
 **Demo Duration:** Unlimited (local)  
 **API Cost:** Depends on GitHub AI quotas
 
-### Option 2: Deployed Demo (Coming Soon)
+### Option 2: Deployed Demo
 
-A publicly hosted version will be available at:
-
-- **URL**: `https://medhelp-ai.streamlit.app` (planned)
-- **Status**: 🔄 In Development
-- **ETA**: Q2 2026
-
-### Option 3: Docker Container (Coming Soon)
-
-Deploy as a containerized application:
-
-```bash
-docker build -t medhelp-ai .
-docker run -p 8501:8501 -e GITHUB_TOKEN=<token> medhelp-ai
-```
+👉 Try the app here:  
+🔗 [https://medapp-ai.streamlit.app/](https://medapp-ai.streamlit.app/)
 
 
 ### Interactive Features to Try
