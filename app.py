@@ -6,16 +6,16 @@ from azure.core.credentials import AzureKeyCredential
 import streamlit as st
 import base64
 from PIL import Image
-from dotenv import load_dotenv
-load_dotenv()
+# from dotenv import load_dotenv
+# load_dotenv()
 
 
 # Set up API endpoint, model, and securely load authentication token
 endpoint = "https://models.github.ai/inference"
 model = "meta/Llama-4-Scout-17B-16E-Instruct"
 
-#token = os.environ["GITHUB_TOKEN"]
-token = os.getenv("GITHUB_TOKEN")
+token = os.environ["GITHUB_TOKEN"]
+# token = os.getenv("GITHUB_TOKEN")
 
 # Initialize client (do once)
 client = ChatCompletionsClient(
