@@ -1,8 +1,6 @@
-# Import required libraries for environment handling, Azure AI inference, image processing, encoding, and building the Streamlit web app
+# Import required libraries for environment handling, Groq inference, image processing, encoding, and building the Streamlit web app
 import os
-from azure.ai.inference import ChatCompletionsClient
-from azure.ai.inference.models import SystemMessage, UserMessage, TextContentItem, ImageContentItem
-from azure.core.credentials import AzureKeyCredential
+from groq import Groq
 import streamlit as st
 import base64
 from PIL import Image
@@ -10,18 +8,13 @@ from PIL import Image
 # load_dotenv()
 
 
-# Set up API endpoint, model, and securely load authentication token
-endpoint = "https://models.github.ai/inference"
-model = "meta/Llama-4-Scout-17B-16E-Instruct"
+# Set up model and securely load authentication token
+model = "meta-llama/llama-4-maverick-17b-128e-instruct"
 
-token = os.environ["GITHUB_TOKEN"]
-# token = os.getenv("GITHUB_TOKEN")
+groq_api_key = os.environ["GROQ_API_KEY"]
 
 # Initialize client (do once)
-client = ChatCompletionsClient(
-    endpoint=endpoint,
-    credential=AzureKeyCredential(token),
-)
+client = Groq(api_key=groq_api_key)
 
 #page configuration
 st.set_page_config(
@@ -74,7 +67,7 @@ st.subheader("AI-powered analysis of medical images to assist early insights and
 #function for response generation
 def generate_medical_response(prompt: str, image_base64: str = None):
     """
-    Generate response from Llama 4 model using text + optional image
+    Generate response from Llama 4 Maverick (via Groq) using text + optional image
 
     Args:
         prompt (str): Your structured medical prompt
@@ -89,34 +82,39 @@ def generate_medical_response(prompt: str, image_base64: str = None):
 
     if image_base64:
         content.append(
-            ImageContentItem(
-                image_url={
+            {
+                "type": "image_url",
+                "image_url": {
                     "url": f"data:image/jpeg;base64,{image_base64}"
                 }
-            )
+            }
         )
 
-    content.append(TextContentItem(text=prompt))
+    content.append({"type": "text", "text": prompt})
 
     try:
-        response = client.complete(
+        response = client.chat.completions.create(
+            model=model,
             messages=[
-                SystemMessage(
-                    content="You are a safe and responsible medical AI assistant."
-                ),
-                UserMessage(content=content),
+                {
+                    "role": "system",
+                    "content": "You are a safe and responsible medical AI assistant."
+                },
+                {
+                    "role": "user",
+                    "content": content
+                }
             ],
             temperature=0.3,      # 🔥 more reliable for medical use
             top_p=0.9,
             max_tokens=2000,
-            model=model
         )
 
         return response.choices[0].message.content
 
     except Exception as e:
         return f"Error generating response: {str(e)}"
-    
+
 #conversion to base64
 def convert_to_base64(uploaded_file):
     return base64.b64encode(uploaded_file.read()).decode("utf-8")
