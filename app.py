@@ -9,7 +9,7 @@ from PIL import Image
 
 
 # Set up model and securely load authentication token
-model = "meta-llama/llama-4-maverick-17b-128e-instruct"
+model = "qwen/qwen3.6-27b"
 
 groq_api_key = os.environ["GROQ_API_KEY"]
 
