@@ -2,7 +2,7 @@
 
 **AI-powered analysis of medical images to assist early insights and understanding**
 
-An intelligent medical imaging assistant powered by Meta's Llama 4 Scout model, designed to help users understand potential health concerns through visual analysis of medical images. This tool leverages advanced multimodal AI to provide structured, safe, and responsible medical insights.
+An intelligent medical imaging assistant powered by Qwen's multimodal model via Groq inference, designed to help users understand potential health concerns through visual analysis of medical images. This tool leverages advanced multimodal AI to provide structured, safe, and responsible medical insights.
 
 ---
 
@@ -26,7 +26,7 @@ An intelligent medical imaging assistant powered by Meta's Llama 4 Scout model, 
 
 ## Overview
 
-**MedHelp AI** is a Streamlit-based web application designed to analyze medical images and provide structured health insights. The application uses Meta's Llama 4 Scout 17B model via GitHub AI inference to deliver:
+**MedHelp AI** is a Streamlit-based web application designed to analyze medical images and provide structured health insights. The application uses the `qwen/qwen3.6-27b` model via **Groq's inference API** to deliver:
 
 - **Visual Analysis** - Detailed examination of medical images
 - **Possible Conditions** - List of potential health conditions with confidence levels
@@ -45,7 +45,7 @@ An intelligent medical imaging assistant powered by Meta's Llama 4 Scout model, 
 - **Multimodal AI Analysis** - Combines image recognition with medical knowledge
 - **Structured Output** - Organized, easy-to-read format for medical insights
 - **Safety-First Design** - Built-in constraints and disclaimers
-- **Real-time Processing** - Instant analysis with AI-powered responses
+- **Real-time Processing** - Fast, low-latency responses via Groq's inference engine
 - **Multiple Image Formats** - Supports PNG, JPG, and JPEG images
 - **Clean UI** - Intuitive Streamlit interface with custom styling
 
@@ -73,22 +73,21 @@ An intelligent medical imaging assistant powered by Meta's Llama 4 Scout model, 
 | Component | Technology | Purpose |
 |-----------|-----------|---------|
 | **Frontend** | Streamlit | Web UI framework |
-| **AI Model** | Meta Llama 4 Scout 17B | Medical image analysis |
-| **Model Provider** | GitHub AI Inference | API endpoint for model |
+| **AI Model** | Qwen (`qwen/qwen3.6-27b`) | Medical image analysis |
+| **Model Provider** | Groq API | Low-latency inference endpoint for the model |
 | **Image Processing** | PIL (Pillow) | Image handling & display |
-| **Authentication** | Azure Core Credentials | Secure API access |
+| **Authentication** | Groq API Key (env variable) | Secure API access |
 | **Environment** | Python 3.8+ | Runtime environment |
-| **Configuration** | python-dotenv | Environment variable management |
 
 ### Dependencies
 
 ```
-streamlit              # Web framework
-azure-ai-inference    # AI model API client
-azure-core            # Azure credentials
-python-dotenv         # Environment configuration
-Pillow               # Image processing
+streamlit    # Web framework
+groq         # Groq inference API client
+Pillow       # Image processing
 ```
+
+> Note: `python-dotenv` is optional — the app can load `GROQ_API_KEY` directly from your shell environment, or from a `.env` file if you uncomment the relevant lines in `app.py`.
 
 ---
 
@@ -97,8 +96,7 @@ Pillow               # Image processing
 ### Prerequisites
 
 - Python 3.8 or higher
-- GitHub AI Inference API access
-- GitHub Token with model access permissions
+- A Groq account and API key ([console.groq.com](https://console.groq.com))
 
 ### Step 1: Clone or Download
 
@@ -128,20 +126,20 @@ pip install -r requirements.txt
 
 ### Step 4: Configure Environment Variables
 
-Create a `.env` file in the project root:
-
-```env
-GITHUB_TOKEN=your_github_token_here
-```
-
-Or set the environment variable directly:
+Set your Groq API key as an environment variable:
 
 ```bash
 # Windows
-set GITHUB_TOKEN=your_github_token_here
+set GROQ_API_KEY=your_groq_api_key_here
 
 # macOS/Linux
-export GITHUB_TOKEN=your_github_token_here
+export GROQ_API_KEY=your_groq_api_key_here
+```
+
+Or create a `.env` file in the project root and uncomment the `dotenv` lines at the top of `app.py`:
+
+```env
+GROQ_API_KEY=your_groq_api_key_here
 ```
 
 ### Step 5: Add Logo
@@ -165,11 +163,11 @@ The application will open in your default browser at `http://localhost:8501`
 The application uses the following default configuration:
 
 ```python
-ENDPOINT: https://models.github.ai/inference
-MODEL: meta/Llama-4-Scout-17B-16E-Instruct
+PROVIDER: Groq (https://api.groq.com)
+MODEL: qwen/qwen3.6-27b
 ```
 
-**To change the model**, edit [app.py](app.py) line 17:
+**To change the model**, edit [app.py](app.py):
 
 ```python
 model = "your_desired_model_here"
@@ -182,6 +180,7 @@ model = "your_desired_model_here"
 | `temperature` | 0.3 | Lower = more deterministic responses (ideal for medical) |
 | `top_p` | 0.9 | Balanced diversity in outputs |
 | `max_tokens` | 2000 | Maximum response length |
+| `reasoning_format` | `"hidden"` | Suppresses internal `<think>...</think>` reasoning from the output |
 
 ---
 
@@ -201,7 +200,7 @@ model = "your_desired_model_here"
 
 3. **Generate Analysis**
    - Click "Generate Analysis" button
-   - Wait for AI processing (typically 5-15 seconds)
+   - Wait for AI processing (typically a few seconds thanks to Groq's fast inference)
    - Structured medical insights will appear
 
 4. **Review Results**
@@ -336,13 +335,12 @@ streamlit run app.py
 
 **Demo Login:** No authentication required  
 **Demo Duration:** Unlimited (local)  
-**API Cost:** Depends on GitHub AI quotas
+**API Cost:** Depends on your Groq usage/quota
 
 ### Option 2: Deployed Demo
 
 👉 Try the app here:  
 🔗 [https://medapp-ai.streamlit.app/](https://medapp-ai.streamlit.app/)
-
 
 ### Interactive Features to Try
 
@@ -370,29 +368,33 @@ MedHelp AI/
 | File | Purpose |
 |------|---------|
 | `app.py` | Main application logic, UI components, API integration |
-| `api_key.py` | Stores API credentials (⚠️ Never commit to version control) |
 | `requirements.txt` | Python package dependencies |
 | `logo.png` | App header logo/branding |
-| `.env` | Environment variables (GitHub token) |
+| `.env` | Environment variables (`GROQ_API_KEY`), optional |
 
 ---
 
 ## Troubleshooting
 
-### ❌ Issue: "Error generating response: Invalid token"
+### ❌ Issue: "Error generating response: Invalid API key" / authentication errors
 
-**Cause**: GitHub token is invalid, expired, or missing  
+**Cause**: Groq API key is invalid, expired, or missing  
 **Solution**:
-1. Verify token is correct in `.env` file
-2. Check GitHub token has AI model access permissions
-3. Regenerate token if expired
+1. Verify `GROQ_API_KEY` is set correctly in your environment (or `.env` file)
+2. Confirm the key is active in your [Groq console](https://console.groq.com)
+3. Regenerate the key if needed
 4. Restart the application
 
 ```bash
-# Verify token is set
-echo $GITHUB_TOKEN  # macOS/Linux
-echo %GITHUB_TOKEN%  # Windows
+# Verify the key is set
+echo $GROQ_API_KEY   # macOS/Linux
+echo %GROQ_API_KEY%  # Windows
 ```
+
+### ❌ Issue: `KeyError: 'GROQ_API_KEY'`
+
+**Cause**: The environment variable isn't set before the app starts  
+**Solution**: Export/set `GROQ_API_KEY` in your shell (or `.env` file with dotenv enabled) before running `streamlit run app.py`.
 
 ### ❌ Issue: "Unable to locate logo.png"
 
@@ -420,12 +422,11 @@ streamlit run app.py --server.port 8502
 
 ### ❌ Issue: Slow analysis or timeouts
 
-**Cause**: Model is busy or network latency  
+**Cause**: Network latency or Groq service load  
 **Solution**:
 1. Check internet connection
-2. Wait for model to load (first request slower)
-3. Reduce image size (compress before upload)
-4. Try again in a few moments
+2. Reduce image size (compress before upload)
+3. Try again in a few moments
 
 ### ❌ Issue: Blurry or incomplete analysis
 
@@ -536,7 +537,6 @@ If you experience a medical emergency:
 - 🚑 **EU**: Call 112
 - 🚑 **Other**: Contact local emergency services
 
-
 ---
 
 ## Contact & Support
@@ -550,16 +550,14 @@ If you experience a medical emergency:
 ### Project Links
 
 - **Repository**: https://github.com/yourusername/medhelp-ai
-- **GitHub AI Docs**: https://github.com/marketplace/models
+- **Groq Docs**: https://console.groq.com/docs
 - **Streamlit Docs**: https://docs.streamlit.io
-- **Llama Models**: https://www.llama.com
 
 ### Acknowledgments
 
-- **Meta** - Llama 4 Scout Model
-- **GitHub** - AI Model Inference API
+- **Alibaba / Qwen** - Qwen model
+- **Groq** - Fast AI model inference API
 - **Streamlit** - Web framework
-- **Azure** - Credentials & inference infrastructure
 
 ---
 
@@ -567,10 +565,10 @@ If you experience a medical emergency:
 
 | Version | Date | Changes |
 |---------|------|---------|
-| 1.0.0 | 2026-03-19 | Initial release with Llama 4 Scout integration |
-| (Planned) 1.1.0 | Q2 2026 | Multi-language support, Docker deployment |
-| (Planned) 1.2.0 | Q3 2026 | Chat history, multiple image analysis |
-| (Planned) 2.0.0 | Q4 2026 | Advanced RAG, specialist models, user accounts |
+| 1.0.0 | 2026-03-19 | Initial release with Llama 4 Scout integration (GitHub AI inference) |
+| 1.1.0 | 2026-08-21 | Migrated to Groq API with `qwen/qwen3.6-27b` model; updated API key configuration |
+| (Planned) 1.2.0 | Q4 2026 | Chat history, multiple image analysis |
+| (Planned) 2.0.0 | Q1 2027 | Advanced RAG, specialist models, user accounts |
 
 ---
 
@@ -580,7 +578,7 @@ If you experience a medical emergency:
 **A**: No. This tool is informational only. Always consult qualified healthcare professionals for medical decisions.
 
 ### Q: What size images should I upload?
-**A**: Recommended 1MB or less. Support formats: PNG, JPG, JPEG. Higher resolution = better analysis.
+**A**: Recommended 1MB or less. Supported formats: PNG, JPG, JPEG. Higher resolution = better analysis.
 
 ### Q: Can I use this for emergency situations?
 **A**: No. For emergencies, call emergency services immediately (911, 999, 112).
@@ -589,13 +587,13 @@ If you experience a medical emergency:
 **A**: The tool provides educated assessments based on visual analysis, but accuracy depends on image quality and complexity. Never rely solely on this tool.
 
 ### Q: Will my data be stored?
-**A**: Currently, images are processed but not stored. However, they are transmitted to GitHub AI servers.
+**A**: Currently, images are processed but not stored locally by the app. However, they are transmitted to Groq's servers for inference.
 
 ### Q: Can I modify the prompt?
 **A**: Yes! Edit the `prompt` variable in [app.py](app.py) to customize analysis behavior.
 
-### Q: How do I get a GitHub token?
-**A**: Visit [GitHub Settings → Developer Settings → Personal Access Tokens](https://github.com/settings/tokens)
+### Q: How do I get a Groq API key?
+**A**: Sign up at [console.groq.com](https://console.groq.com) and generate an API key from your account dashboard.
 
 ---
 
@@ -607,16 +605,15 @@ Typical performance on standard hardware:
 |-----------|------|
 | Application startup | 2-3 seconds |
 | Image upload | <1 second |
-| AI analysis | 5-15 seconds |
+| AI analysis | 2-8 seconds (Groq's low-latency inference) |
 | Result rendering | <1 second |
-| **Total response time** | **6-16 seconds** |
+| **Total response time** | **3-10 seconds** |
 
 ### Factors Affecting Speed
 
 - 🌍 Network connectivity
-- ⏱️ Model availability (first request slower)
 - 📸 Image size/resolution
-- 🖥️ System resources (CPU, RAM, GPU)
+- 🖥️ System resources (CPU, RAM)
 
 ---
 
@@ -625,15 +622,15 @@ Typical performance on standard hardware:
 ### API Key Security
 
 ✅ **DO:**
-- Store tokens in `.env` file
-- Keep `.env` in `.gitignore`
-- Use environment variables
-- Rotate tokens regularly
+- Store your key as the `GROQ_API_KEY` environment variable
+- Keep `.env` in `.gitignore` if you use one
+- Use environment variables rather than hardcoding
+- Rotate keys regularly
 
 ❌ **DON'T:**
 - Commit API keys to version control
-- Share tokens publicly
-- Hardcode credentials
+- Share keys publicly
+- Hardcode credentials in `app.py`
 - Post keys in issues/PRs
 
 ### Example `.gitignore`
@@ -650,5 +647,3 @@ venv/
 ---
 
 **Built with ❤️ for health awareness and education**
-
----
