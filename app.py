@@ -108,6 +108,7 @@ def generate_medical_response(prompt: str, image_base64: str = None):
             temperature=0.3,      # 🔥 more reliable for medical use
             top_p=0.9,
             max_tokens=2000,
+            reasoning_format="hidden",  # don't leak <think>...</think> into the output
         )
 
         return response.choices[0].message.content
